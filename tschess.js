@@ -93,18 +93,29 @@ const moveIsPossible = (board, moveDescription) => {
     const invertedMove = invertMove(fromX, fromY, toX, toY);
 
     const piece = getPiece(board, invertedMove.fromX, invertedMove.fromY);
-    const pieceMoves = getPieceMoves(piece, invertedMove.fromX, invertedMove.fromY);
+    const pieceMoves = getPieceMoves(board, piece, invertedMove.fromX, invertedMove.fromY);
     if(pieceMoves.some(pm => (pm[0] == invertedMove.toX) && (pm[1] == invertedMove.toY))) {
         return true;
     }
     return false;
 }
 
+const oppositeColor = (color) => {
+    switch (color[0]) {
+        case "w":
+            return "b";
+        case "b":
+            return "w";
+    
+        default:
+            return "-";
+    }
+} 
 
-const getPieceMoves = (piece, x, y) => {
+const getPieceMoves = (board, piece, x, y) => {
     const moves = [];
     switch(piece[1]){
-        case "k": {
+        case "k": { // a knights move
             moves.push([x+2, y+1]);
             moves.push([x+2, y-1]);
             moves.push([x+1, y+2]);
@@ -115,8 +126,51 @@ const getPieceMoves = (piece, x, y) => {
             moves.push([x-1, y-2]);
             break;
         }
-        case "r": {
-            
+        case "r": { // a rooks move
+            for(let x2=x+1; x2 <= 7; x2++){
+                if(isOccupiedByColor(board, x2, y, piece[0])){
+                    break;
+                }
+                moves.push([x2, y]);
+                if(isOccupiedByColor(board, x2, y, oppositeColor(piece[0]))){
+                    break;
+                }
+            }
+            for(let x2=x-1; x2 >= 0; x2--){
+                if(isOccupiedByColor(board, x2, y, piece[0])){
+                    break;
+                }
+                moves.push([x2, y]);
+                if(isOccupiedByColor(board, x2, y, oppositeColor(piece[0]))){
+                    break;
+                }
+            }
+            for(let y2=y+1; y2 <= 7; y2++){
+                if(isOccupiedByColor(board, x, y2, piece[0])){
+                    break;
+                }
+                moves.push([x, y2]);
+                if(isOccupiedByColor(board, x, y2, oppositeColor(piece[0]))){
+                    break;
+                }
+            }
+            for(let y2=y-1; y2 >= 0; y2--){
+                if(isOccupiedByColor(board, x, y2, piece[0])){
+                    break;
+                }
+                moves.push([x, y2]);
+                if(isOccupiedByColor(board, x, y2, oppositeColor(piece[0]))){
+                    break;
+                }
+            }
+            break;
+        }
+        case "p": {
+            moves.push([
+                x,
+                piece[0] === "b" ? y+1 : y-1
+            ])
+            break;
         }
         default: {
             break;
