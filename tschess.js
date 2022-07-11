@@ -110,7 +110,48 @@ const oppositeColor = (color) => {
         default:
             return "-";
     }
-} 
+}
+
+const calculateRogueMoves = (board, piece, x, y) => {
+    const moves = [];
+    for(let x2=x+1; x2 <= 7; x2++){
+        if(isOccupiedByColor(board, x2, y, piece[0])){
+            break;
+        }
+        moves.push([x2, y]);
+        if(isOccupiedByColor(board, x2, y, oppositeColor(piece[0]))){
+            break;
+        }
+    }
+    for(let x2=x-1; x2 >= 0; x2--){
+        if(isOccupiedByColor(board, x2, y, piece[0])){
+            break;
+        }
+        moves.push([x2, y]);
+        if(isOccupiedByColor(board, x2, y, oppositeColor(piece[0]))){
+            break;
+        }
+    }
+    for(let y2=y+1; y2 <= 7; y2++){
+        if(isOccupiedByColor(board, x, y2, piece[0])){
+            break;
+        }
+        moves.push([x, y2]);
+        if(isOccupiedByColor(board, x, y2, oppositeColor(piece[0]))){
+            break;
+        }
+    }
+    for(let y2=y-1; y2 >= 0; y2--){
+        if(isOccupiedByColor(board, x, y2, piece[0])){
+            break;
+        }
+        moves.push([x, y2]);
+        if(isOccupiedByColor(board, x, y2, oppositeColor(piece[0]))){
+            break;
+        }
+    }
+    return moves;
+}
 
 const getPieceMoves = (board, piece, x, y) => {
     const moves = [];
@@ -127,42 +168,7 @@ const getPieceMoves = (board, piece, x, y) => {
             break;
         }
         case "r": { // a rooks move
-            for(let x2=x+1; x2 <= 7; x2++){
-                if(isOccupiedByColor(board, x2, y, piece[0])){
-                    break;
-                }
-                moves.push([x2, y]);
-                if(isOccupiedByColor(board, x2, y, oppositeColor(piece[0]))){
-                    break;
-                }
-            }
-            for(let x2=x-1; x2 >= 0; x2--){
-                if(isOccupiedByColor(board, x2, y, piece[0])){
-                    break;
-                }
-                moves.push([x2, y]);
-                if(isOccupiedByColor(board, x2, y, oppositeColor(piece[0]))){
-                    break;
-                }
-            }
-            for(let y2=y+1; y2 <= 7; y2++){
-                if(isOccupiedByColor(board, x, y2, piece[0])){
-                    break;
-                }
-                moves.push([x, y2]);
-                if(isOccupiedByColor(board, x, y2, oppositeColor(piece[0]))){
-                    break;
-                }
-            }
-            for(let y2=y-1; y2 >= 0; y2--){
-                if(isOccupiedByColor(board, x, y2, piece[0])){
-                    break;
-                }
-                moves.push([x, y2]);
-                if(isOccupiedByColor(board, x, y2, oppositeColor(piece[0]))){
-                    break;
-                }
-            }
+            calculateRogueMoves(board, piece, x, y).forEach(move => moves.push(move));
             break;
         }
         case "p": {
