@@ -177,18 +177,76 @@ const calculatePawnMoves = (board, piece, x, y) => {
     return moves;
 }
 
+const calculateKnightMoves = (board, piece, x, y) => {
+    const moves = [];
+    moves.push([x+2, y+1]);
+    moves.push([x+2, y-1]);
+    moves.push([x+1, y+2]);
+    moves.push([x+1, y-2]);
+    moves.push([x-2, y+1]);
+    moves.push([x-2, y-1]);
+    moves.push([x-1, y+2]);
+    moves.push([x-1, y-2]);
+    return moves;
+}
+
+const calculateBishopMoves = (board, piece, x, y) => {
+    const moves = [];
+    for(let inc=1; (x+inc <= 7) && (y+inc <= 7); inc++){
+        const x2 = x+inc;
+        const y2 = y+inc;
+        if(isOccupiedByColor(board, x2, y2, piece[0])){
+            break;
+        }
+        moves.push([x2, y2]);
+        if(isOccupiedByColor(board, x2, y2, oppositeColor(piece[0]))){
+            break;
+        }
+    }
+
+    for(let inc=1; (x-inc >= 0) && (y-inc >= 0); inc++){
+        const x2 = x-inc;
+        const y2 = y-inc;
+        if(isOccupiedByColor(board, x2, y2, piece[0])){
+            break;
+        }
+        moves.push([x2, y2]);
+        if(isOccupiedByColor(board, x2, y2, oppositeColor(piece[0]))){
+            break;
+        }
+    }
+
+    for(let inc=1; (x+inc <= 7) && (y-inc >= 0); inc++){
+        const x2 = x+inc;
+        const y2 = y-inc;
+        if(isOccupiedByColor(board, x2, y2, piece[0])){
+            break;
+        }
+        moves.push([x2, y2]);
+        if(isOccupiedByColor(board, x2, y2, oppositeColor(piece[0]))){
+            break;
+        }
+    }
+
+    for(let inc=1; (x-inc >= 0) && (y+inc <= 7); inc++){
+        const x2 = x-inc;
+        const y2 = y+inc;
+        if(isOccupiedByColor(board, x2, y2, piece[0])){
+            break;
+        }
+        moves.push([x2, y2]);
+        if(isOccupiedByColor(board, x2, y2, oppositeColor(piece[0]))){
+            break;
+        }
+    }
+    return moves;
+}
+
 const getPieceMoves = (board, piece, x, y) => {
     const moves = [];
     switch(piece[1]){
         case "k": { // a knights move
-            moves.push([x+2, y+1]);
-            moves.push([x+2, y-1]);
-            moves.push([x+1, y+2]);
-            moves.push([x+1, y-2]);
-            moves.push([x-2, y+1]);
-            moves.push([x-2, y-1]);
-            moves.push([x-1, y+2]);
-            moves.push([x-1, y-2]);
+            calculateKnightMoves(board, piece, x, y).forEach(move => moves.push(move));
             break;
         }
         case "r": { // a rooks move
@@ -197,6 +255,10 @@ const getPieceMoves = (board, piece, x, y) => {
         }
         case "p": {
             calculatePawnMoves(board, piece, x, y).forEach(move => moves.push(move));
+            break;
+        }
+        case "b": {
+            calculateBishopMoves(board, piece, x, y).forEach(move => moves.push(move));
             break;
         }
         default: {
