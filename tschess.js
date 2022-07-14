@@ -153,6 +153,30 @@ const calculateRogueMoves = (board, piece, x, y) => {
     return moves;
 }
 
+const calculatePawnMoves = (board, piece, x, y) => {
+    const moves = [];
+    moves.push([
+        x,
+        piece[0] === "b" ? y+1 : y-1
+    ]);
+
+    if(y == 1 && piece[0] === "b"){
+        moves.push([
+            x,
+            y+2
+        ]);
+    }
+
+    if(y == 6 && piece[0] === "w"){
+        moves.push([
+            x,
+            y-2
+        ]);
+    }
+
+    return moves;
+}
+
 const getPieceMoves = (board, piece, x, y) => {
     const moves = [];
     switch(piece[1]){
@@ -172,10 +196,7 @@ const getPieceMoves = (board, piece, x, y) => {
             break;
         }
         case "p": {
-            moves.push([
-                x,
-                piece[0] === "b" ? y+1 : y-1
-            ])
+            calculatePawnMoves(board, piece, x, y).forEach(move => moves.push(move));
             break;
         }
         default: {
