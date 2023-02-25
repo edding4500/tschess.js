@@ -58,6 +58,12 @@ const invertMove = (fromX, fromY, toX, toY) => {
 
 
 const getPiece = (board, x, y) => {
+    // Another insight on functional programming: the importance of a
+    // type system. It may not be neccessary, but it easily adds a
+    // validation layer, telling you what function compositions are
+    // valid. Additionally, we see here that we always return a string,
+    // but in case there is no piece, because we left the board,
+    // we return an empty string, which is not really verbatim.
     if(x > 7 || x < 0 || y > 7 || y < 0){
         return '';
     }
