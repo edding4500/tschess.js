@@ -20,7 +20,7 @@ const startBoard = () => {
 }
 
 
-const makeMove = (board, moveDescription) => {
+const makeMove = (board, moveDescription, beatenWhite, beatenBlack) => {
     if(moveDescription.length != 5){
         return board;
     }
@@ -244,6 +244,13 @@ const calculateBishopMoves = (board, piece, x, y) => {
 
 const getPieceMoves = (board, piece, x, y) => {
     const moves = [];
+    // now this is why pattern matching was invented, right?
+    // Because in functional programming, there are no methods tied to
+    // objects, but just data und functions, we sometimes have to
+    // apply different functions to data to receive a certain modified
+    // version of that data. Without pattern matching we have to do what we are doing here:
+    // switch over some variable that tells us what kind of data we are looking at
+    // and select the according method.
     switch(piece[1]){
         case "k": { // a knights move
             calculateKnightMoves(board, piece, x, y).forEach(move => moves.push(move));
@@ -274,7 +281,7 @@ const isOccupiedByColor = (board, x, y, color) => {
 }
 
 
-function printBoard(board){
+function printBoard(board, beatenWhite, beatenBlack){
     let indent = "  ";
     let out = indent + " a b c d e f g h \n\n";
     for(let y=0; y<board.length; y++){
@@ -285,6 +292,8 @@ function printBoard(board){
         out += '\n';
     }
     out += "\n" + indent + " a b c d e f g h \n";
+    out += "\n" + "Beaten whites:" + beatenWhite.join(', ') + "\n";
+    out += "\n" + "Beaten blacks:" + beatenBlack.join(', ') + "\n";
     return out;
 }
 
@@ -292,8 +301,10 @@ function printBoard(board){
 function repl() {
 
     let board = startBoard();
+    let beatenWhite = [];
+    let beatenBlack = [];
 
-    console.log(printBoard(board));
+    console.log(printBoard(board, beatenWhite, beatenBlack));
 
     return new Promise(function(resolve, reject){
         let rl = readline.createInterface(process.stdin, process.stdout)
@@ -306,8 +317,8 @@ function repl() {
             }
 
             if(moveIsPossible(board, line)){
-                board = makeMove(board, line);
-                console.log(printBoard(board));
+                board = makeMove(board, line, beatenWhite, beatenBlack);
+                console.log(printBoard(board, beatenWhite, beatenBlack));
             } else {
                 console.log("Move is not possible.");
             }
